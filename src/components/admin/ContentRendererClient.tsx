@@ -39,7 +39,7 @@ export const ContentRendererClient = ({
 
   //@ts-ignore
   const [quality, setQuality] = useState<number>(
-    searchParams.get('quality') | null,
+    parseInt(searchParams.get('quality')!, 10),
   );
 
   if (!metadata) {
