@@ -1,0 +1,57 @@
+'use client';
+import { usePathname } from 'next/navigation';
+import React from 'react';
+import { toast } from 'sonner';
+import { createMessage } from '../../actions/comment';
+import { useAction } from '../../hooks/useAction';
+import { FormErrors } from '../FormError';
+import { Button } from '../ui/button';
+
+const CommentInputForm = ({
+  contentId,
+  parentId = undefined,
+}: {
+  contentId: number;
+  parentId?: number | undefined;
+}) => {
+  const currentPath = usePathname();
+  const formRef = React.useRef<HTMLFormElement>(null);
+  const { execute, fieldErrors } = useAction(createMessage, {
+    onSuccess: () => {
+      toast('Comment added');
+      formRef.current?.reset();
+    },
+    onError: (error) => {
+      toast.error(error);
+    },
+  });
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.target as HTMLFormElement);
+
+    const content = formData.get('content') as string;
+
+    execute({
+      content,
+      contentId,
+      parentId,
+      currentPath,
+    });
+  };
+  return (
+    <form className="grid gap-4" onSubmit={handleFormSubmit} ref={formRef}>
+      <textarea
+        id="content"
+        name="content"
+        className="min-h-[50px] rounded-md dark:bg-gray-800 border-2 text-muted-foreground p-2 "
+        placeholder="Add a public comment..."
+      />
+      <FormErrors id="content" errors={fieldErrors} />
+      <div className="flex justify-end gap-2">
+        <Button type="submit">Comment</Button>
+      </div>
+    </form>
+  );
+};
+
+export default CommentInputForm;

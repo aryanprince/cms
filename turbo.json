@@ -9,6 +9,17 @@
         ".output/**",
         ".vercel/output/**"
       ]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "format": {
+      "outputs": ["node_modules/.cache/.prettiercache"],
+      "outputMode": "new-only"
+    },
+    "lint": {
+      "outputs": ["node_modules/.cache/.eslintcache"]
     }
   }
 }
